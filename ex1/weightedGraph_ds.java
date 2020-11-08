@@ -57,6 +57,8 @@ public class weightedGraph_ds implements weighted_graph{
 	public void connect(int node1, int node2, double w) {
 		if(node1==node2) return;
 		if(nodes.get(node1)==null || nodes.get(node2)==null) return;
+		if(!hasEdge(node1, node2)) edges_size++;
+		else  return;
 		// if node1 not in edges -> put node1 to the edges hash with node2 and weigt w
 		if(!edges.containsKey(node1)) {
 			HashMap<node_info, Double> node2_e = new HashMap<node_info, Double>();
@@ -68,12 +70,10 @@ public class weightedGraph_ds implements weighted_graph{
 			node1_e.put(nodes.get(node1), w);
 			edges.put(node2, node1_e);
 		}
-		if(!hasEdge(node1, node2)) {
-			edges.get(node1).put(nodes.get(node2), w);
-			edges.get(node2).put(nodes.get(node1), w);
-			edges_size++;
-		}
 
+		
+		edges.get(node1).put(nodes.get(node2), w);
+		edges.get(node2).put(nodes.get(node1), w);
 		MC++;
 		
 	}

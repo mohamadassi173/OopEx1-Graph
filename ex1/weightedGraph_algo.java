@@ -1,5 +1,6 @@
 package ex1;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ public class weightedGraph_algo implements weighted_graph_algorithms{
 	private Queue<Integer> q;
 	private weighted_graph myGraph;
 	private int source;
+	private final int START=-1; 
 	
 	/**
 	 * Basic constructor
@@ -81,15 +83,34 @@ public class weightedGraph_algo implements weighted_graph_algorithms{
 
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		// TODO Auto-generated method stub
-		return 0;
+		source =src;
+		bfs_dist();
+		double t=  ((nodeInfo) myGraph.getNode(dest)).getW();
+		if(t==Integer.MAX_VALUE) return -1;
+		return t;
 	}
 
 	@Override
 	public List<node_info> shortestPath(int src, int dest) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			List<node_info> path =  new ArrayList<node_info>(); // the path we want to return
+			if (dest==src) { // return the path with only source node
+			path.add(new nodeInfo(src));
+			return path;
+			}
+			source = src;
+			bfs();
+			if (((nodeInfo) myGraph.getNode(dest)).getW()==START) return null; 
+			else{ 
+				path.add(new nodeInfo(dest)); // adds the dest node
+				int t= (int) myGraph.getNode(dest).getTag();
+				while (t != START){  // adds from the last node in the path
+					path.add(new nodeInfo(t));
+					t =  (int) myGraph.getNode(t).getTag();
+				}
+			}
+			return path;// reverse the list then return it
+			}
+	
 
 	@Override
 	public boolean save(String file) {
@@ -108,22 +129,27 @@ public class weightedGraph_algo implements weighted_graph_algorithms{
 		
 		weighted_graph g = new weightedGraph_ds();
 		
-//		g.addNode(0);
-//		g.addNode(1);
-//		g.addNode(2);
-//		myGraph.addNode(3);
-//		myGraph.addNode(4);
-		g.connect(0, 1, 4.2);
+		g.addNode(0);
+		g.addNode(1);
+		g.addNode(2);
+		g.addNode(3);
+		g.addNode(4);
+		g.connect(0, 1, 2);
+		g.connect(1, 4, 1);
+		g.connect(0, 2, 3);
+		g.connect(1, 4, 3);
 		weighted_graph_algorithms gg = new weightedGraph_algo();
 		gg.init(g);
-		System.out.println(gg.isConnected());
-		
+		System.out.println(gg.shortestPathDist(0, 4));
+//		System.out.println(gg.shortestPath(0, 2).get(1).getKey());
+//		System.out.println(gg.shortestPath(0, 2).get(2).getKey());
 	}
 	
 	public void bfs() {
 		for (node_info n : myGraph.getV()) {
-				n.setInfo(NOT_VISITED);
+				n.setInfo(NOT_VISITED); // color 
 		}
+
 		myGraph.getNode(source).setInfo(NOT_YET);
 		q.add(source);
 		while (!q.isEmpty()) { // check if we finished modifed all nieghbors..
@@ -131,12 +157,29 @@ public class weightedGraph_algo implements weighted_graph_algorithms{
 		if(myGraph.getV(u) != null && !myGraph.getV(u).isEmpty())
 		for(node_info n1 : myGraph.getV(u)) { // check every node with nieghbors
 			if(myGraph.getNode(n1.getKey()).getInfo() == NOT_VISITED) {
-				myGraph.getNode(n1.getKey()).setTag(myGraph.getNode(u).getTag()+1);
 				myGraph.getNode(n1.getKey()).setInfo(NOT_YET);
 				q.add(n1.getKey());
 			}
 		}
 		myGraph.getNode(u).setInfo(VISITED);
+		}
+	}
+	public void bfs_dist() {
+		for (node_info n : myGraph.getV()) {
+				((nodeInfo) n).setW(Integer.MAX_VALUE);
+		}
+		((nodeInfo) myGraph.getNode(source)).setW(0);
+
+		q.add(source);
+		while (!q.isEmpty()) { // check if we finished modifed all nieghbors..
+		int u = q.poll();
+		if(myGraph.getV(u) != null && !myGraph.getV(u).isEmpty())
+		for(node_info n1 : myGraph.getV(u)) { // check every node with nieghbors
+				if(((nodeInfo) myGraph.getNode(u)).getW()+myGraph.getEdge(n1.getKey(), u) <((nodeInfo) myGraph.getNode(n1.getKey())).getW()) {
+					((nodeInfo) myGraph.getNode(n1.getKey())).setW(((nodeInfo) myGraph.getNode(u)).getW()+myGraph.getEdge(n1.getKey(), u));
+					q.add(n1.getKey());
+				}				
+			}
 		}
 	}
 
