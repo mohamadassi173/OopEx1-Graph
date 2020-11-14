@@ -60,5 +60,10 @@ public class nodeInfo implements node_info{
 	public void setW(double weighted) {
 		this.w = weighted;
 	}
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return key+"";
+	}
 
 }
