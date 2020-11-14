@@ -1,10 +1,12 @@
 package ex1;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,13 +14,16 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 
-
-public class WGraph_Algo implements weighted_graph_algorithms{
+public class WGraph_Algo implements weighted_graph_algorithms, Serializable{
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1074869663530623414L;
 	private final String VISITED="VISITED", NOT_YET="NOT YET",NOT_VISITED="NOT VISITED";
 	private Queue<Integer> q;
-	private weighted_graph myGraph;
+	private weighted_graph myGraph= new WGraph_DS();
 	private int source;
 	private final int START=-1; 
 	
@@ -51,7 +56,7 @@ public class WGraph_Algo implements weighted_graph_algorithms{
 	}
 
 	@Override
-	public weighted_graph copy() {
+	public weighted_graph copy() { //deep copy..
 		weighted_graph g = new WGraph_DS();
 		// add g1 nodes to graph g
 		for (node_info n : myGraph.getV()) {
@@ -60,11 +65,10 @@ public class WGraph_Algo implements weighted_graph_algorithms{
 				g.addNode(n1.getKey());
 			}
 		}
+		
 		// add g1 edges to graph g
-
 		for(node_info n1 : myGraph.getV()){
 			for(node_info n2 : myGraph.getV(n1.getKey())) {
-
 				if(myGraph.getV(n1.getKey()).contains(n2)) {
 					double w = myGraph.getEdge(n2.getKey(),n1.getKey());
 					g.connect(n1.getKey(), n2.getKey(), w);
@@ -92,9 +96,9 @@ public class WGraph_Algo implements weighted_graph_algorithms{
 	public double shortestPathDist(int src, int dest) {
 		if(myGraph.getNode(src) == null ||myGraph.getNode(dest) == null ) return -1;
 		source =src;
-		bfs_dist();
+		dijikstra_dist(); 
 		double t=  ((nodeInfo) myGraph.getNode(dest)).getW();
-		if(t==Integer.MAX_VALUE) return -1;
+		if(t==Integer.MAX_VALUE) return -1; // if theres no path between src and dest nodes
 		return t;
 	}
 
@@ -104,7 +108,7 @@ public class WGraph_Algo implements weighted_graph_algorithms{
 		if(myGraph.getNode(src) == null ||myGraph.getNode(dest) == null ) return null;
 		double dest_w = ((nodeInfo) myGraph.getNode(dest)).getW();
 			source=src;
-			bfs_dist();
+			dijikstra_dist();
 			if(dest_w==-1) return ans;
 			ans.add(myGraph.getNode(dest)); // adds the dest node
 			int t= (int) myGraph.getNode(dest).getTag();
@@ -118,39 +122,50 @@ public class WGraph_Algo implements weighted_graph_algorithms{
 
 	@Override
 	public boolean save(String file) {
-		
 		try {
-			FileOutputStream file1 = new FileOutputStream(file);
-			ObjectOutputStream out = new ObjectOutputStream(file1);
+			FileOutputStream out_file = new FileOutputStream(file);
+			ObjectOutputStream oout = new ObjectOutputStream(out_file);
+			weighted_graph myGraph2= new WGraph_DS();
+			oout.writeObject(myGraph2); // save the graph to file
 			
-			
+			oout.close();
+			out_file.close();
 			return true;
-		} catch (IOException ex) {
+		} catch (FileNotFoundException e) {
+			return false;
+		} catch (IOException e) {
 			return false;
 		}
+
+	
 	}
+
 
 	@Override
 	public boolean load(String file) {
 		try {
-			FileInputStream file_load = new FileInputStream(file);
-			ObjectInputStream in = new ObjectInputStream(file_load);
-
-			
-			
-			in.close();
-			file_load.close();
-
+			ObjectInputStream object=new ObjectInputStream(new FileInputStream(file));
+			 // load/copy the graph from the file
+			this.myGraph=  (weighted_graph) object.readObject();		
+			object.close();
 			return true;
 		}
-		catch (IOException ex) {
-			return false;
-		}
+        catch(IOException e)  { 
+            return false; 
+        } 
+ 
+        catch(ClassNotFoundException e) { 
+           return false;
+        } 
 
-	}
+	    }
+
+	
 	
 
-	
+	/**
+	 * bfs function to find if the graph is connected 
+	 */
 	private void bfs() {
 		for (node_info n : myGraph.getV()) {
 				n.setInfo(NOT_VISITED); // color 
@@ -171,8 +186,11 @@ public class WGraph_Algo implements weighted_graph_algorithms{
 		}
 	}
 	
-	
-	private void bfs_dist() {
+	/**
+	 * updated my bfs function to dijisktra with adding check weight condtion 
+	 * and set the dest in every local node weight 
+	 */
+	private void dijikstra_dist() {
 		for (node_info n : myGraph.getV()) {
 				((nodeInfo) n).setW(Integer.MAX_VALUE);
 				n.setTag(START);

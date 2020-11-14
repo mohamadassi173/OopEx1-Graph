@@ -5,7 +5,7 @@ public class nodeInfo implements node_info{
 	private int key;
 	private static int id=0;
 	private String info;
-	private double tag; // for algorithms
+	private double tag;
 	private double w;
 	
 	

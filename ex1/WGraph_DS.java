@@ -1,13 +1,18 @@
 package ex1;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 
 
 
-public class WGraph_DS implements weighted_graph{
+public class WGraph_DS implements weighted_graph, Serializable{
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1074869663530623414L;
 	private HashMap<Integer, node_info> nodes;
 	private HashMap<Integer, HashMap<node_info, Double>> edges;
 	private int MC;
@@ -70,10 +75,13 @@ public class WGraph_DS implements weighted_graph{
 			node1_e.put(nodes.get(node1), w);
 			edges.put(node2, node1_e);
 		}
-		edges.get(node1).put(nodes.get(node2), w);
-		edges.get(node2).put(nodes.get(node1), w);
-		MC++;
 		
+		// to not increase MC without making any change(update or connect)
+		if(edges.get(node1).get(nodes.get(node2))!= null
+				&& edges.get(node1).get(nodes.get(node2))!= w) MC++;
+		
+		edges.get(node1).put(nodes.get(node2), w);
+		edges.get(node2).put(nodes.get(node1), w);	
 	}
 
 	@Override
@@ -118,8 +126,6 @@ public class WGraph_DS implements weighted_graph{
 			edges.get(node1).remove(nodes.get(node2));
 			edges.get(node2).remove(nodes.get(node1));
 		}
-
-		
 	}
 
 	@Override
@@ -137,6 +143,21 @@ public class WGraph_DS implements weighted_graph{
 	@Override
 	public int getMC() {
 		return MC;
+	}
+	@Override
+	public String toString() {
+		String g = "";
+		for(node_info n : nodes.values()) {
+			g+=n.toString()+",";
+		}
+		g+="\n";
+		
+		for(node_info n1 : nodes.values()) {
+			for(node_info n2 : getV(n1.getKey())) {
+				g+=n1.getKey()+"," + n2.getKey() + "," + getEdge(n1.getKey(), n2.getKey()) + "\n";
+			}
+		}
+		return g;
 	}
 
 }
