@@ -8,25 +8,6 @@ public class nodeInfo implements node_info{
 	private double tag;
 	private double w;
 	
-	
-	/**
-	 * Basic constructor
-	 */
-	public nodeInfo() {
-		key=id;
-		id++;
-	}
-	
-	/**
-	 * Basic constructor
-	 * @param key2 - the key of the node
-	 */
-	public nodeInfo(int key2) {
-		key=key2;
-	}
-
-
-	////////////////// getters and setters
 	@Override
 	public int getKey() {
 		return key;
@@ -64,6 +45,38 @@ public class nodeInfo implements node_info{
 	public String toString() {
 		// TODO Auto-generated method stub
 		return key+"";
+	}
+	
+	
+	@Override
+	public boolean equals(Object n2) {
+		if(n2 instanceof nodeInfo) {
+			return ((node_info) n2).getKey()==key; // return true if both nodes have the same keys
+		}
+		return false;
+	}
+	
+	
+	
+	
+///////////////////////////////////////////// constructors ////////////////////////////////////////
+
+	
+	
+	/**
+	 * Basic constructor
+	 */
+	public nodeInfo() {
+		key=id;
+		id++;
+	}
+	
+	/**
+	 * Basic constructor
+	 * @param key2 - the key of the node
+	 */
+	public nodeInfo(int key2) {
+		key=key2;
 	}
 
 }

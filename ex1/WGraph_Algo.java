@@ -26,22 +26,6 @@ public class WGraph_Algo implements weighted_graph_algorithms, Serializable{
 	private weighted_graph myGraph= new WGraph_DS();
 	private int source;
 	private final int START=-1; 
-	
-	/**
-	 * Basic constructor
-	 * @param g0 - to g the graph
- 	 */
-	public WGraph_Algo(weighted_graph g0) {
-		this.myGraph = g0;
-	}
-
-	/**
-	 * Basic constructor
-	 */
-	public WGraph_Algo() {
-		q = new PriorityQueue<Integer>();
-		this.myGraph = new WGraph_DS();
-	}
 
 
 	@Override
@@ -162,7 +146,33 @@ public class WGraph_Algo implements weighted_graph_algorithms, Serializable{
 
 	
 	
+	
+	
+///////////////////////////////////////////// constructors ////////////////////////////////////////
+	
+	/**
+	 * Basic constructor
+	 * @param g0 - to g the graph
+ 	 */
+	public WGraph_Algo(weighted_graph g0) {
+		this.myGraph = g0;
+	}
 
+	/**
+	 * Basic constructor
+	 */
+	public WGraph_Algo() {
+		q = new PriorityQueue<Integer>();
+		this.myGraph = new WGraph_DS();
+	}
+	
+	
+	
+	
+	
+///////////////////////////////////////////// private functions ////////////////////////////////////////
+	
+	
 	/**
 	 * bfs function to find if the graph is connected 
 	 */
