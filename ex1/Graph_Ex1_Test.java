@@ -65,7 +65,7 @@ class Graph_Ex1_Test {
 	@Test
 	void test4() {
 
-		connect_graph();
+		build_graph();
 		// testing copy 
 		graph = algo.copy(); // deep copy the graph 
 		algo.init(graph);  // init the graph after deep copy
@@ -88,8 +88,8 @@ class Graph_Ex1_Test {
 	 * node with key 6 is connected to the any node in the graph
 	 * so it must be not connected
 	 */
-	void test4_1(){
-		connect_graph();
+	void test4_2(){
+		build_graph();
 		graph.removeEdge(3, 6); // now node with key 6 is not connected to any node..
 		f = algo.isConnected(); 
 		graph.removeNode(0); // still false
@@ -107,27 +107,29 @@ class Graph_Ex1_Test {
 		check_path = new LinkedList<node_info>();
         algo.init(graph);  
 		// find path with not exist vertices in the graph
-		t &= algo.shortestPathDist(0, 1) == -1;
-		t &= algo.shortestPath(1, 0) == null;
-		
+        assertTrue(algo.shortestPathDist(0, 1) == -1);
+        assertTrue(algo.shortestPath(1, 0) == null);
+	}
+	
+	void test5_2() {
+		check_path = new LinkedList<node_info>();
+        algo.init(graph);  
+        
 		// path with one node
 		add_vertices(1);
 		check_path.add(graph.getNode(0));
-		t &= algo.shortestPathDist(0, 0) == 0;
-		t &= algo.shortestPath(0, 0).equals(check_path);  
-        
-        assertTrue(t);
+		assertTrue(algo.shortestPath(0, 0).equals(check_path));
+        assertTrue(algo.shortestPathDist(0, 0) == 0);
 	}
 	
 	
     /**
      * graph with 7 vertices 
      * testing shortest path and shortest path dest functions 
-     *  with extra b3rfesh sho akteb..
      */
 	@Test
 	void test6() {
-		connect_graph();
+		build_graph();
 		check_path.add(graph.getNode(6));
 		check_path.add(graph.getNode(3));
 		check_path.add(graph.getNode(4));
@@ -147,7 +149,7 @@ class Graph_Ex1_Test {
 	
 	@Test
 	void test7() {
-		connect_graph();
+		build_graph();
         graph.connect(0, 4, 2); // update the weight to 2
         check_path.add(graph.getNode(0));
         check_path.add(graph.getNode(4));
@@ -195,7 +197,7 @@ class Graph_Ex1_Test {
 	 * then connect the graph with complex edges and weight 
 	 * 
 	 */
-	void connect_graph() {
+	void build_graph() {
 		shortestPath = new LinkedList<node_info>();
 		check_path = new LinkedList<node_info>();
 		path_dest =0;
