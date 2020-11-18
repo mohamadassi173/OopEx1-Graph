@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,19 +89,19 @@ public class WGraph_Algo implements weighted_graph_algorithms, Serializable{
 
 	@Override
 	public List<node_info> shortestPath(int src, int dest) {
-		List<node_info> ans = new LinkedList<node_info>();
+		List<node_info> ans_path = new LinkedList<node_info>();
 		if(myGraph.getNode(src) == null ||myGraph.getNode(dest) == null ) return null;
 		double dest_w = ((nodeInfo) myGraph.getNode(dest)).getW();
 			source=src;
 			dijikstra_dist();
-			if(dest_w==-1) return ans;
-			ans.add(myGraph.getNode(dest)); // adds the dest node
+			if(dest_w==-1) return ans_path;
+			ans_path.add(myGraph.getNode(dest)); // adds the dest node
 			int t= (int) myGraph.getNode(dest).getTag();
 			while (t != START){  // adds from the last node in the path
-				ans.add(myGraph.getNode(t));
+				ans_path.add(myGraph.getNode(t));
 				t = (int) myGraph.getNode(t).getTag();
 			}		
-		return ans;
+		return  list_reverse(ans_path);
 			}
 	
 
@@ -219,6 +220,20 @@ public class WGraph_Algo implements weighted_graph_algorithms, Serializable{
 				}				
 			}
 		}
+	}
+	
+	/**
+	 * reverse list of node_data
+	 * @param a - the list to reverse 
+	 * @return reversed list
+	 */
+	private List<node_info> list_reverse(List<node_info> a) {
+		List<node_info> b =  new ArrayList<node_info>();
+		for (int i = 0; i < a.size(); i++) {
+			b.add(a.get(a.size()-i-1));// copy from the end of the list
+		}
+		return b;
+		
 	}
 	
 	}

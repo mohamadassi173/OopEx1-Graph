@@ -60,25 +60,22 @@ public class WGraph_DS implements weighted_graph, Serializable{
 		if(nodes.get(node1)==null || nodes.get(node2)==null) return;
 		if(!hasEdge(node1, node2)) edges_size++;
 		else {
+			// to not increase MC without making any change(update or connect)
 			if(edges.get(node1).get(nodes.get(node2))!=w) MC++;
 		}
 		
-		// if node1 not in edges -> put node1 to the edges hash with node2 and weigt w
+//		// if node1 not in edges -> put node1 to the edges hash with node2 and weigt w
 		if(!edges.containsKey(node1)) {
 			HashMap<node_info, Double> node2_e = new HashMap<node_info, Double>();
 			node2_e.put(nodes.get(node2), w);
 			edges.put(node1, node2_e);
 		}
+		
 		if(!edges.containsKey(node2)) {
 			HashMap<node_info, Double> node1_e = new HashMap<node_info, Double>();
 			node1_e.put(nodes.get(node1), w);
 			edges.put(node2, node1_e);
 		}
-		
-		// to not increase MC without making any change(update or connect)
-		if(edges.get(node1).get(nodes.get(node2))!= null
-				&& edges.get(node1).get(nodes.get(node2))!= w) MC++;
-		
 		edges.get(node1).put(nodes.get(node2), w);
 		edges.get(node2).put(nodes.get(node1), w);	
 	}
