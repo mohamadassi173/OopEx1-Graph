@@ -1,6 +1,8 @@
-package ex1;
+package ex1.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,6 +14,17 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ex1.src.WGraph_Algo;
+import ex1.src.WGraph_DS;
+import ex1.src.nodeInfo;
+import ex1.src.node_info;
+import ex1.src.weighted_graph;
+import ex1.src.weighted_graph_algorithms;
+
+/**
+ * testing all graph data structures and graph algoreithms classes.
+ * @author mohamad assi
+ */
 class Graph_Ex1_Test {
 	weighted_graph graph;
 	weighted_graph_algorithms algo;
@@ -242,11 +255,12 @@ class Graph_Ex1_Test {
 	
 	
 	
+	
     private static WGraph_DS graph_creator(int v_size, int e_size, int seed) {
     	WGraph_DS g = new WGraph_DS();
         _rnd = new Random(seed);
         for(int i=0;i<v_size;i++) {
-            node_info n = new nodeInfo();
+        	node_info n = new nodeInfo();
             g.addNode(n.getKey());
         }
         	int[] nodes = nodes(g);
